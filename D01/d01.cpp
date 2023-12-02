@@ -1,5 +1,5 @@
 // Michael Chen
-// Advent of Code Day 1 part 1
+// Advent of Code Day 1 part 1 and 2
 // 12/1/2023
 
 #include <iostream>
@@ -57,7 +57,7 @@ int trie_search(Trie* root, string text){
     return temp->value;
 }
 
-int first_last_numbers (string text, Trie* root){
+int first_last_numbers (string text, Trie* root, bool part2){
     // Finds the first and last numbers in `text` and splices them into a two
     // digit int.
 
@@ -76,7 +76,7 @@ int first_last_numbers (string text, Trie* root){
             }
             last = c - '0';
         } 
-        else {
+        else if (part2){
             int i = c - 'a';
             prev_root = root->child[prev_i];
             temp = temp->child[i];
@@ -113,7 +113,7 @@ int main () {
 
     string line;
     ifstream input;
-    int sum = 0;
+    int sum_p1 = 0, sum_p2 = 0;
 
     Trie* number_trie = trie_make();
     trie_insert(number_trie, "zero", 0);
@@ -131,10 +131,12 @@ int main () {
 
     if (input.is_open()){
         while ( getline(input, line)){
-            // cout << first_last_numbers(line, number_trie) << '\n';
-            sum += first_last_numbers(line, number_trie);
+            sum_p1 += first_last_numbers(line, number_trie, false);
+            sum_p2 += first_last_numbers(line, number_trie, true);
         }
-        cout << sum << '\n';
+        cout << "Day 1 part 1: " << sum_p1 << '\n';
+        cout << "Day 1 part 2: " << sum_p2 << '\n';
+
         input.close();
     }
 
