@@ -15,7 +15,6 @@ struct Trie{
     bool is_end;
 };
 
-
 Trie* trie_make(){
     // makes a trie
     Trie* root = (Trie*) calloc (1, sizeof(Trie));
@@ -28,7 +27,6 @@ Trie* trie_make(){
 }
 
 void trie_insert(Trie* root, string text, int val){
-
     Trie* temp = root;
     for (const char& c : text){
         int i = c - 'a';
@@ -40,7 +38,6 @@ void trie_insert(Trie* root, string text, int val){
             temp = temp->child[i];
         }
     }
-
     temp -> value = val;
     temp -> is_end = true;
 }
@@ -66,8 +63,6 @@ int first_last_numbers (string text, Trie* root){
 
     int first, last;
     bool start = true;
-    // string out_string = "--";
-
     Trie* temp = root;
     Trie* prev_root = NULL;
     int prev_i = 0; // no numbers start with a.
