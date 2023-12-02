@@ -5,7 +5,6 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <tuple>
 #include <array>
 using namespace std;
 #define R_MAX 12
@@ -21,7 +20,6 @@ bool check_max(string hand){
     for (int i=0; i < 3; i++){
 
         size_t pos = hand.find(colors[i]);
-        size_t zero = 0;
         if (pos == string::npos){continue;}
 
         string color_str = hand.substr(0,pos);
@@ -72,7 +70,6 @@ void color_nums(string hand, int* color_nums){
     for (int i=0; i < 3; i++){
 
         size_t pos = hand.find(colors[i]);
-        size_t zero = 0;
         if (pos == string::npos){continue;}
 
         string color_str = hand.substr(0,pos);
@@ -109,7 +106,6 @@ int power_game(string line){
 
         game = hand.second;
         if (game.length() < 2){
-            // cout << min_array[0] << min_array[1] << min_array[2] << '\n';
             return min_array[0]*min_array[1]*min_array[2];
         }
     }
