@@ -1,5 +1,5 @@
 // Michael Chen
-// Advent of Code 2023 Day 3 part 1
+// Advent of Code 2023 Day 3 part 1 and 2
 // 12/3/2023
 
 #include <iostream>
