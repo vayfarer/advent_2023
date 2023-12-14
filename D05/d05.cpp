@@ -93,7 +93,7 @@ vector<pair<long,long>> run_pairs(vector<pair<long, long>> &ranges, vector<vecto
 
 int main () {
 
-    clock_t start = clock();
+    clock_t timer = clock();
     string line;
     ifstream read_file;
     long sum_p1 = 0, sum_p2 = 0;
@@ -153,7 +153,8 @@ int main () {
         seeds_p2 = min(seeds_p2, range.first);
     }
 
-    cout << "runtime: " << (float)(clock()-start)/CLOCKS_PER_SEC * 1000 << "ms \n";
+    timer = clock() - timer;
+    cout << "runtime: " << (float)timer/CLOCKS_PER_SEC * 1000 << "ms \n";
 
     cout << "Day 5 part 1: " << *min_element(seeds_p1.begin(), seeds_p1.end()) << '\n';
     cout << "Day 5 part 2: " << seeds_p2 << '\n';

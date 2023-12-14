@@ -14,7 +14,7 @@ using namespace std;
 
 int main () {
 
-    clock_t start = clock();
+    clock_t timer = clock();
     string line;
     ifstream read_file;
     int p1 = 1, p2;
@@ -64,7 +64,8 @@ int main () {
         }
     }
 
-    cout << "runtime: " << (float)(clock()-start)/CLOCKS_PER_SEC * 1000 << "ms \n";
+    timer = clock() - timer;
+    cout << "runtime: " << (float)timer/CLOCKS_PER_SEC * 1000 << "ms \n";
     
     cout << "Day 6 part 1: " << p1 << '\n';
     cout << "Day 6 part 2: " << p2 << '\n';
