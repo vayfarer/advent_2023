@@ -8,11 +8,13 @@
 #include <vector>
 #include <regex>
 #include <cmath>
+#include <ctime>
 using namespace std;
 
 
 int main () {
 
+    clock_t start = clock();
     string line;
     ifstream read_file;
     int p1 = 1, p2;
@@ -61,6 +63,8 @@ int main () {
             break;
         }
     }
+
+    cout << "runtime: " << (float)(clock()-start)/CLOCKS_PER_SEC * 1000 << "ms \n";
     
     cout << "Day 6 part 1: " << p1 << '\n';
     cout << "Day 6 part 2: " << p2 << '\n';
