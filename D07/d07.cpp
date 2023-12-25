@@ -12,15 +12,15 @@
 #include <ctime>
 #include <cctype>
 #include <algorithm>    // std::sort
-#include <forward_list>
+#include <tuple>
 using namespace std;
 
-int card_to_i (char c){
+int card_to_i (char c, bool joker){
     map<char, int> faces;
     faces ['A'] = 14;
     faces ['K'] = 13;
     faces ['Q'] = 12;
-    faces ['J'] = 11;
+    faces ['J'] = (joker)?1:11;
     faces ['T'] = 10;
 
     if (isdigit(c)){
@@ -30,28 +30,19 @@ int card_to_i (char c){
     }
 }
 
-int card_to_i_p2 (char c){
-    map<char, int> faces;
-    faces ['A'] = 14;
-    faces ['K'] = 13;
-    faces ['Q'] = 12;
-    faces ['J'] = 1;
-    faces ['T'] = 10;
-
-    if (isdigit(c)){
-        return c - '0';
-    } else {
-        return faces[c];
+vector<int> hand_to_v(string hand, bool joker){
+    vector <int> h_nums;
+    for (char &c : hand){
+        h_nums.push_back(card_to_i(c, joker));
     }
+    return h_nums;
 }
 
-int rank_hand (vector<int> hand){
-    int high = 0;
+int rank_hand (vector<int> hand, bool joker){
     int num_kind1 = 0, num_kind2 = 0;
     map <int, int> h_map;
 
     for (int &n: hand){
-        if (n > high) {high = n;}
         if (h_map.count(n)){h_map[n]++;} else {h_map[n] = 1;}
     }
 
@@ -64,43 +55,7 @@ int rank_hand (vector<int> hand){
         }
     }
 
-    switch (num_kind1){
-        case 5:
-            return 6;
-        case 4:
-            return 5;
-        case 3:
-            if (num_kind2 == 2){return 4;} else {return 3;}
-        case 2:
-            if (num_kind2 == 2){return 2;} else {return 1;}
-        case 1: 
-            return 0;
-        default:
-            cout << "ERROR!!";
-            return 0;            // how did you get here??
-    }
-}
-
-int rank_hand_p2 (vector<int> hand){
-    int high = 0;
-    int num_kind1 = 0, num_kind2 = 0;
-    map <int, int> h_map;
-
-    for (int &n: hand){
-        if (n > high) {high = n;}
-        if (h_map.count(n)){h_map[n]++;} else {h_map[n] = 1;}
-    }
-
-    for(const auto& card : h_map){
-        if (card.second > num_kind1){
-            num_kind2 = num_kind1;
-            num_kind1 = card.second;
-        } else if (card.second > num_kind2) {
-            num_kind2 = card.second;
-        }
-    }
-
-    if (h_map.count(1)){
+    if (joker && h_map.count(1)){
         // has at least one joker
         if (h_map[1] <= num_kind2){
             // jokers are at most second most common. add to most common. 
@@ -120,71 +75,26 @@ int rank_hand_p2 (vector<int> hand){
         case 1: 
             return 0;
         default:
-            cout << num_kind1 << ' ';
-            cout << "ERROR!!\n";
+            cout << "ERROR!!";
             return 0;            // how did you get here??
     }
 }
 
-bool h_less_than (pair<string, int> hand1, pair<string, int> hand2) {
+bool h_less_than (tuple<vector<int>, int, int> hand1, tuple<vector<int>, int, int> hand2) {
     // true if hand1 is greater than hand2.
-
-    string h1 = hand1.first, h2 = hand2.first;
-    vector <int> h1_nums, h2_nums;
-    bool order_rank, ranked = false;
-
-    for (int i = 0; i <5; i++){
-        char &ch1 = h1[i], &ch2 = h2[i];
-        int h1_num = card_to_i(ch1), h2_num = card_to_i(ch2);
-        h1_nums.push_back(h1_num); h2_nums.push_back(h2_num);
-        if (!ranked){
-            if (h1_num == h2_num){continue;}
-            order_rank = (h1_num > h2_num)? false : true;
-            ranked = true;
-        }
-    }
-
-    int h1_rank = rank_hand(h1_nums), h2_rank = rank_hand(h2_nums);
-
-    if (h1_rank > h2_rank){
+    if (get<2>(hand1) > get<2>(hand2)){
         return false;
     }
     
-    if (h1_rank == h2_rank) {
-        return order_rank;
-    }
-
-    return true;
-}
-
-bool h_less_than_p2 (pair<string, int> hand1, pair<string, int> hand2) {
-    // true if hand1 is greater than hand2.
-
-    string h1 = hand1.first, h2 = hand2.first;
-    vector <int> h1_nums, h2_nums;
-    bool order_rank, ranked = false;
-
-    for (int i = 0; i <5; i++){
-        char &ch1 = h1[i], &ch2 = h2[i];
-        int h1_num = card_to_i_p2(ch1), h2_num = card_to_i_p2(ch2);
-        h1_nums.push_back(h1_num); h2_nums.push_back(h2_num);
-        if (!ranked){
-            if (h1_num == h2_num){continue;}
-            order_rank = (h1_num > h2_num)? false : true;
-            ranked = true;
+    if (get<2>(hand1) == get<2>(hand2)) {
+        bool order_rank;
+        for (int i = 0; i <5; i++){
+            if (get<0>(hand1)[i] == get<0>(hand2)[i]){continue;}
+            order_rank = (get<0>(hand1)[i] > get<0>(hand2)[i])? false : true;
+            break;
         }
-    }
-
-    int h1_rank = rank_hand_p2(h1_nums), h2_rank = rank_hand_p2(h2_nums);
-
-    if (h1_rank > h2_rank){
-        return false;
-    }
-    
-    if (h1_rank == h2_rank) {
         return order_rank;
     }
-
     return true;
 }
 
@@ -195,7 +105,7 @@ int main () {
     string line;
     ifstream read_file;
     int p1 = 0, p2 = 0;
-    vector<pair<string, int>> hands;
+    vector<tuple<vector<int>, int, int>> hands, hands_p2;
     string temp_nums = "";
 
     read_file.open ("input");
@@ -205,18 +115,23 @@ int main () {
         smatch hand;
         while(getline(read_file, line)){
             regex_match(line, hand, e);
-            hands.push_back(make_pair(hand.str(1), stoi(hand.str(2))));
+            vector<int> vector_hand = hand_to_v(hand.str(1),false);
+            vector<int> vector_hand_p2 = hand_to_v(hand.str(1),true);
+            hands.push_back(make_tuple(vector_hand, stoi(hand.str(2)), 
+            rank_hand(vector_hand, false)));
+            hands_p2.push_back(make_tuple(vector_hand_p2, stoi(hand.str(2)), 
+            rank_hand(vector_hand_p2, true)));
         }
     }    
 
     sort(hands.begin(), hands.end(), h_less_than);
     for (int i = 0; i < hands.size(); i++){
-        p1 += (i+1) * hands[i].second;
+        p1 += (i+1) * get<1>(hands[i]);
     }
 
-    sort(hands.begin(), hands.end(), h_less_than_p2);
-    for (int i = 0; i < hands.size(); i++){
-        p2 += (i+1) * hands[i].second;
+    sort(hands_p2.begin(), hands_p2.end(), h_less_than);
+    for (int i = 0; i < hands_p2.size(); i++){
+        p2 += (i+1) * get<1>(hands_p2[i]);
     }
 
     timer = clock() - timer;
