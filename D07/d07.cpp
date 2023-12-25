@@ -113,7 +113,6 @@ int main () {
 
     read_file.open ("input");
     if (read_file.is_open()){
-        //get times
         regex e ("(\\w+) (\\d+)");
         smatch hand;
         while(getline(read_file, line)){
