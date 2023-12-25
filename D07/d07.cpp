@@ -38,6 +38,14 @@ vector<int> hand_to_v(string hand, bool joker){
     return h_nums;
 }
 
+int vector_to_i(vector<int> hand){
+    int nhand = 0;
+    for (int i = 0; i < 5; i++){
+        nhand += pow(16,(4-i)) * hand[i];
+    }
+    return nhand;
+}
+
 int rank_hand (vector<int> hand, bool joker){
     int num_kind1 = 0, num_kind2 = 0;
     map <int, int> h_map;
@@ -80,21 +88,16 @@ int rank_hand (vector<int> hand, bool joker){
     }
 }
 
-bool h_less_than (tuple<vector<int>, int, int> hand1, tuple<vector<int>, int, int> hand2) {
+bool h_less_than (tuple<int, int, int> hand1, tuple<int, int, int> hand2) {
     // true if hand1 is greater than hand2.
-    if (get<2>(hand1) > get<2>(hand2)){
+    if (get<1>(hand1) > get<1>(hand2)){
         return false;
     }
     
-    if (get<2>(hand1) == get<2>(hand2)) {
-        bool order_rank;
-        for (int i = 0; i <5; i++){
-            if (get<0>(hand1)[i] == get<0>(hand2)[i]){continue;}
-            order_rank = (get<0>(hand1)[i] > get<0>(hand2)[i])? false : true;
-            break;
-        }
-        return order_rank;
+    if (get<1>(hand1) == get<1>(hand2)) {
+        return (get<2>(hand1) > get<2>(hand2))? false : true;
     }
+
     return true;
 }
 
@@ -105,7 +108,7 @@ int main () {
     string line;
     ifstream read_file;
     int p1 = 0, p2 = 0;
-    vector<tuple<vector<int>, int, int>> hands, hands_p2;
+    vector<tuple<int, int, int>> hands, hands_p2;
     string temp_nums = "";
 
     read_file.open ("input");
@@ -117,21 +120,21 @@ int main () {
             regex_match(line, hand, e);
             vector<int> vector_hand = hand_to_v(hand.str(1),false);
             vector<int> vector_hand_p2 = hand_to_v(hand.str(1),true);
-            hands.push_back(make_tuple(vector_hand, stoi(hand.str(2)), 
-            rank_hand(vector_hand, false)));
-            hands_p2.push_back(make_tuple(vector_hand_p2, stoi(hand.str(2)), 
-            rank_hand(vector_hand_p2, true)));
+            hands.push_back(make_tuple(stoi(hand.str(2)), 
+            rank_hand(vector_hand, false), vector_to_i(vector_hand)));
+            hands_p2.push_back(make_tuple(stoi(hand.str(2)), 
+            rank_hand(vector_hand_p2, true), vector_to_i(vector_hand_p2)));
         }
     }    
 
     sort(hands.begin(), hands.end(), h_less_than);
     for (int i = 0; i < hands.size(); i++){
-        p1 += (i+1) * get<1>(hands[i]);
+        p1 += (i+1) * get<0>(hands[i]);
     }
 
     sort(hands_p2.begin(), hands_p2.end(), h_less_than);
     for (int i = 0; i < hands_p2.size(); i++){
-        p2 += (i+1) * get<1>(hands_p2[i]);
+        p2 += (i+1) * get<0>(hands_p2[i]);
     }
 
     timer = clock() - timer;
