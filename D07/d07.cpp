@@ -109,7 +109,6 @@ int main () {
     ifstream read_file;
     int p1 = 0, p2 = 0;
     vector<tuple<int, int, int>> hands, hands_p2;
-    string temp_nums = "";
 
     read_file.open ("input");
     if (read_file.is_open()){
