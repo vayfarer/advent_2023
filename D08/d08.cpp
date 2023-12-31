@@ -69,8 +69,8 @@ int main () {
     timer = clock() - timer;
     cout << "runtime: " << (float)timer/CLOCKS_PER_SEC * 1000 << "ms \n";
     
-    cout << "Day 7 part 1: " << p1 << '\n';
-    cout << "Day 7 part 2: " << p2 << '\n';
+    cout << "Day 8 part 1: " << p1 << '\n';
+    cout << "Day 8 part 2: " << p2 << '\n';
 
     return 0;
 }
