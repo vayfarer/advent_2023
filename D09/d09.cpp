@@ -1,81 +1,65 @@
 // Michael Chen
 // Advent of Code 2023 Day 9 part 1 and 2
-// 12/27/2023
+// 12/31/2023
 
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <regex>
-#include <cmath>
-#include <numeric>
-#include <map>
 #include <ctime>
 #include <cctype>
 using namespace std;
 
+pair<int, int> diff_step(vector <int> nums){
+    vector <int> diffs;
+    bool zeroes = true;
+    for (int i = 0; i < nums.size() - 1; i++){
+        int new_diff = nums[i+1] - nums[i];
+        diffs.push_back(new_diff);
+        if (new_diff) {zeroes = false;}
+    }
+    if (zeroes){
+        return make_pair(nums.front(), nums.back());
+    }
+    pair<int, int> next_diff = diff_step(diffs);
+    next_diff.first = nums.front() - next_diff.first;
+    next_diff.second += nums.back();
+    return next_diff;
+}
 
 int main () {
 
-    string num = "45 ";
-    int a = stoi(num);
-
-    cout << "test" << a;
-
     clock_t timer = clock();
 
-    // string line;
-    // string instructions;
-    // ifstream read_file;
-    // int p1 = 0;
-    // long p2 = 1;
-    // unordered_map <string, pair<string, string>> node_map;
-    // vector <string> start_nodes_p2;
+    string line;
+    ifstream read_file;
+    long p1 = 0, p2 = 0;
 
-    // read_file.open ("input");
-    // if (read_file.is_open()){
+    read_file.open ("input");
+    if (read_file.is_open()){
 
-    //     getline(read_file, instructions); // instructions line
-    //     getline(read_file, line); // blank line
-        
-    //     regex e ("(\\w+) = \\((\\w+), (\\w+)\\)");
-    //     smatch node;
-    //     while(getline(read_file, line)){
-    //         regex_match(line, node, e);
-    //         node_map.emplace(node.str(1), make_pair(node.str(2), node.str(3)));
-    //         if (node.str(1)[2] == 'A'){
-    //             start_nodes_p2.push_back(node.str(1));
-    //         }
-    //     }
-    // }    
+        regex e ("(-?[\\d]+)");
+        smatch nums;
 
-    // string node = "AAA";
-    // while (node != "ZZZ") {
-    //     char &move = instructions[p1 % instructions.size()];
-    //     node = (move == 'R') ? node_map.at(node).second : node_map.at(node).first;
-    //     p1++;
-    // }
+        while(getline(read_file, line)){
+            vector <int> num_line;
+            while(regex_search(line, nums, e)){
+                num_line.push_back(stoi(nums.str(0)));
+                line = nums.suffix().str();
+            }
 
-    // vector <int> moves_p2;
-    // for (string &node_p2: start_nodes_p2){
-    //     int n = 0;
-    //     while (node_p2[2] != 'Z') {
-    //         char &move = instructions[n % instructions.size()];
-    //         node_p2 = (move == 'R') ? node_map.at(node_p2).second : node_map.at(node_p2).first;
-    //         n++;
-    //     }
-    //     moves_p2.push_back(n);
-    // }
-
-    // for (int &n: moves_p2){
-    //     p2 = lcm(p2, n);
-    // }
+            pair<int, int> next_steps = diff_step(num_line);
+            p1 += next_steps.second;
+            p2 += next_steps.first;
+        }
+    }    
 
     timer = clock() - timer;
     cout << "runtime: " << (float)timer/CLOCKS_PER_SEC * 1000 << "ms \n";
     
-    // cout << "Day 7 part 1: " << p1 << '\n';
-    // cout << "Day 7 part 2: " << p2 << '\n';
+    cout << "Day 9 part 1: " << p1 << '\n';
+    cout << "Day 9 part 2: " << p2 << '\n';
 
     return 0;
 }
