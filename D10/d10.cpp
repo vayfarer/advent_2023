@@ -36,6 +36,7 @@ int main () {
             }
             n++;
         }
+        read_file.close();
     }    
 
     pair <int, int> down = make_pair(1,0), right = make_pair(0,1), up = make_pair(-1,0), left = make_pair(0,-1);

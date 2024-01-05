@@ -123,6 +123,7 @@ int main () {
             hands_p2.push_back(make_tuple(stoi(hand.str(2)), 
             rank_hand(vector_hand_p2, true), vector_to_i(vector_hand_p2)));
         }
+        read_file.close();
     }    
 
     sort(hands.begin(), hands.end(), h_less_than);

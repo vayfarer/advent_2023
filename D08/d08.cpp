@@ -42,6 +42,7 @@ int main () {
                 start_nodes_p2.push_back(node.str(1));
             }
         }
+        read_file.close();
     }    
 
     string node = "AAA";

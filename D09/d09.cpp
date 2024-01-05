@@ -53,6 +53,7 @@ int main () {
             p1 += next_steps.second;
             p2 += next_steps.first;
         }
+        read_file.close();
     }    
 
     timer = clock() - timer;
